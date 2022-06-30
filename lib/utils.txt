@@ -1,0 +1,6 @@
+flutter run --no-sound-null-safety
+
+
+flutter clean
+
+flutter pub get
