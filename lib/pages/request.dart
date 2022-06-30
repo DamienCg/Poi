@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:latlong/latlong.dart';
-import 'package:poi/pages/utilis.dart';
 
 class RequestPage extends StatefulWidget {
   @override
@@ -46,14 +44,14 @@ class _RequestPageState extends State<RequestPage> {
                               border: Border(
                                   bottom:
                                       BorderSide(color: Colors.grey[200]!))),
-                          child: Row(
+                          child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Text(
                                   "Select POI Category: ",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 DropdownButton<String>(
@@ -71,14 +69,14 @@ class _RequestPageState extends State<RequestPage> {
                               border: Border(
                                   bottom:
                                       BorderSide(color: Colors.grey[200]!))),
-                          child: Row(
+                          child: Column(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: <Widget>[
                                 Text(
                                   "Select Rank Position: ",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14,
+                                    fontSize: 16,
                                   ),
                                 ),
                                 DropdownButton<String>(
@@ -93,6 +91,7 @@ class _RequestPageState extends State<RequestPage> {
                       ],
                     ),
                   ),
+                  SizedBox(height: 50),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(

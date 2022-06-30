@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text("Select privacy settings:",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               SizedBox(height: 10),
               DropdownButton<String>(
                 value: value,
@@ -35,7 +35,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
               SizedBox(height: 10),
               Text(SecondElementPrivacy,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               SizedBox(height: 10),
               SizedBox(height: 10),
               DropdownButton<String>(
@@ -61,7 +61,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 14,
+                          fontSize: 18,
                         ),
                       ),
                     ),
@@ -69,7 +69,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
               SizedBox(height: 150),
-              Text('Signed in as: ' + user.email!),
+              Text(
+                'Signed in as: ' + user.email!,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Colors.blueGrey),
+              ),
+              SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
@@ -82,7 +89,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                     child: Center(
                       child: Text(
-                        'Sign In',
+                        'Sign Out',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
