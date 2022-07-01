@@ -68,7 +68,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 150),
+              SizedBox(height: 230),
               Text(
                 'Signed in as: ' + user.email!,
                 style: TextStyle(
@@ -77,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     color: Colors.blueGrey),
               ),
               SizedBox(height: 20),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: GestureDetector(
                   onTap: () => FirebaseAuth.instance.signOut(),
@@ -99,7 +99,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                 ),
-              ),
+              ), */
             ],
           ),
         ),
