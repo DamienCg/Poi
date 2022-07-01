@@ -1,5 +1,6 @@
 //ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poi/pages/request.dart';
 import 'package:poi/pages/settings.dart';
@@ -34,6 +35,14 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text("POI"),
         backgroundColor: Colors.deepPurple,
+        actions: [
+          GestureDetector(
+            onTap: () {
+              FirebaseAuth.instance.signOut();
+            },
+            child: Icon(Icons.logout),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: currentIndex,
