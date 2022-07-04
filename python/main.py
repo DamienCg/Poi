@@ -1,18 +1,8 @@
-import geocoder
-myloc = geocoder.ip('me')
-print(myloc.latlng)
+from flask import Flask
 
-from geopy.geocoders import Nominatim
+app = Flask(__name__)
+@app.route('/')
+def index():
+    return "Hello world"
 
-# calling the Nominatim tool
-loc = Nominatim(user_agent="GetLoc")
-
-# entering the location name
-getLoc = loc.geocode("Gosainganj Lucknow")
-
-# printing address
-print(getLoc.address)
-
-# printing latitude and longitude
-print("Latitude = ", getLoc.latitude, "\n")
-print("Longitude = ", getLoc.longitude)
+app.run(debug=True)
