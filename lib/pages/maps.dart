@@ -1,9 +1,5 @@
-//ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:poi/pages/utilis.dart';
-// ignore: depend_on_referenced_packages
 import 'package:latlong2/latlong.dart';
 
 class MapsPage extends StatefulWidget {
@@ -41,7 +37,6 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) => Scaffold(
         body: Stack(
           children: <Widget>[
-            UtilisShape.button,
             new FlutterMap(
                 options: new MapOptions(
                     minZoom: 10.0, center: new LatLng(44.49, 11.34)),

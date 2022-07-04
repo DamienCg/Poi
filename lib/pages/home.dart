@@ -1,10 +1,8 @@
-//ignore_for_file: prefer_const_constructors
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:poi/pages/request.dart';
-import 'package:poi/pages/settings.dart';
 import 'package:poi/pages/maps.dart';
+import 'package:poi/pages/settings.dart';
 import 'maps.dart';
 
 class Home extends StatefulWidget {
@@ -20,7 +18,7 @@ class _HomeState extends State<Home> {
   List<Widget> pages = [
     RequestPage(),
     MapsPage(),
-    SettingsPage(),
+    Settings(),
   ];
 
   void _onItemTapped(int index) {
