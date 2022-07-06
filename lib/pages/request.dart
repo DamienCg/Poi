@@ -6,7 +6,13 @@ class RequestPage extends StatefulWidget {
 }
 
 class _RequestPageState extends State<RequestPage> {
-  final poiCategory = ['Green Area', 'Museum', 'bordello'];
+  final poiCategory = [
+    'Historical Building',
+    'Park',
+    'Theater',
+    'Museum',
+    'Department'
+  ];
   final rankPosition = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
   String? value;
