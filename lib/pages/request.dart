@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:poi/location_service.dart';
 
 class RequestPage extends StatefulWidget {
   @override
@@ -17,6 +18,15 @@ class _RequestPageState extends State<RequestPage> {
 
   String? value;
   String? value2;
+
+  //location
+  String? lat, long;
+
+  @override
+  void initState() {
+    super.initState();
+    getLocation();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -101,7 +111,7 @@ class _RequestPageState extends State<RequestPage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: GestureDetector(
-                      onTap: () => {},
+                      onTap: () => {SaveLatLong()},
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
@@ -135,4 +145,25 @@ class _RequestPageState extends State<RequestPage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
       );
+
+  void getLocation() async {
+    final service = LocationService();
+    final locationData = await service.getLocation();
+
+    if (locationData != null) {
+      setState(() {
+        //lat = locationData.latitude!.toStringAsFixed(4);
+        //long = locationData.longitude!.toStringAsFixed(4);
+        lat = locationData.latitude!.toString();
+        long = locationData.longitude!.toString();
+        print(this.lat);
+        print(this.long);
+      });
+    }
+  }
+
+  void SaveLatLong() {
+    print(this.lat);
+    print(this.long);
+  }
 }
