@@ -45,5 +45,12 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<!--  Location	-->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allow location Service</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow this service</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Allow me</string>
 </dict>
 </plist>
