@@ -29,15 +29,14 @@ class _MySettingsState extends State<Settings> {
   String _selectedState = "Nothing to select";
   var state = {
     'Nothing to select': 'NP',
-    '1': 'DU',
-    '2': 'DU',
-    '3': 'DU',
-    '4': 'DU',
     '5': 'DU',
-    'altro': 'GPSP',
-    'altro1': 'GPSP',
-    'altro2': 'GPSP',
-    'altro3': 'GPSP',
+    '10': 'DU',
+    '15': 'DU',
+    '20': 'DU',
+    '25': 'DU',
+    '0': 'GPSP',
+    '1': 'GPSP',
+    '2': 'GPSP',
   };
 
   List _states = [];

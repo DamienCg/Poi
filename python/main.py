@@ -33,12 +33,16 @@ def gpsDistance(lat1, long1, lat2, long2):
 
 
 def perturbate(digit):
+    print(digit)
+    print("Lat origin: ",LAT_ORIG)
     latStr = str(LAT_ORIG)
     longStr = str(LONG_ORIG)
     digitRandom = random.randint(0, 9)
     latNew = latStr[:3 + digit] + str(digitRandom) + latStr[3 + digit + 1:]
     digitRandom = random.randint(0, 9)
     longNew = longStr[:3 + digit] + str(digitRandom) + longStr[3 + digit + 1:]
+    print("New Lat:    ",latNew)
+    print("---------------")
     return latNew, longNew
 
 
