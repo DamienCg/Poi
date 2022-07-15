@@ -21,11 +21,11 @@ class Position {
     print("Long: " + this.long.toString());
   }
 
-  Position Dummyupdate(Position realPosition) {
-    int dummy = 3; // TODO Recupero Dummy da settings
+  Position Dummyupdate(String privacydetail) {
+    int dummy = int.parse(privacydetail);
     Random r = new Random();
     List<Position> dummyPosition = new List.empty(growable: true);
-    Position RealPosition = Position(lat, long);
+    Position RealPosition = Position(this.lat, this.long);
     int RealPositionIndex = r.nextInt(dummy - 1);
 
     for (var i = 0; i < dummy; i++) {
@@ -49,7 +49,7 @@ class Position {
         " " +
         dummyPosition.elementAt(RealPositionIndex).long.toString());
 
-    return realPosition;
+    return RealPosition;
   }
 
 /*
@@ -58,10 +58,10 @@ non invio il dato reale ma faccio camuffaggio, non invio un dato reale ma faccio
 invece di inviare un dato con 10 cifre dopo la virgola invio un dato con 3 cifre dopo la virgola
 oppure faccio sostituzione casuale di alcune cifre.
 */
-  Position Perturbation(Position realPosition) {
-    int digits = 3;
-    double lat = 11.3726;
-    double long = 44.2657;
+  Position Perturbation(String privacydetail) {
+    int digits = int.parse(privacydetail);
+    double lat = this.lat;
+    double long = this.long;
     int LatBeforePoint = int.parse(lat.toString().split(".")[0]);
     int LatAfterPoint = int.parse(lat.toString().split(".")[1]);
     int LongBeforePoint = int.parse(long.toString().split(".")[0]);

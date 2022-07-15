@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:poi/location_service.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'package:poi/Controller/position.dart';
 
 class RequestPage extends StatefulWidget {
   @override
@@ -156,8 +159,6 @@ class _RequestPageState extends State<RequestPage> {
         //long = locationData.longitude!.toStringAsFixed(4);
         lat = locationData.latitude!.toString();
         long = locationData.longitude!.toString();
-        print(this.lat);
-        print(this.long);
       });
     }
   }
@@ -165,5 +166,32 @@ class _RequestPageState extends State<RequestPage> {
   void SaveLatLong() {
     print(this.lat);
     print(this.long);
+    _read();
+  }
+
+  Future<String> _read() async {
+    String text = "";
+    try {
+      final Directory directory = await getApplicationDocumentsDirectory();
+      final File file = File('${directory.path}/settings.txt');
+      text = await file.readAsString();
+    } catch (e) {
+      print("Couldn't read file");
+      showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+                title: Text("Alert!"),
+                content: Text("First you need to set your privacy preferences"),
+              ));
+    }
+    print(text);
+    Position position =
+        new Position(double.parse(this.lat!), double.parse(this.long!));
+    String privacyCategory = text.split(":").first;
+    String privacydetail = text.split(":").last;
+    if (privacyCategory == "GPS perturbation")
+      position.Perturbation(privacydetail);
+    if (privacyCategory == "Dummy update") position.Dummyupdate(privacydetail);
+    return text;
   }
 }

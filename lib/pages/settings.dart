@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:poi/settingsClass.dart';
+import 'dart:io';
 
 class Settings extends StatefulWidget {
   Settings({Key? key}) : super(key: key);
@@ -170,5 +173,12 @@ class _MySettingsState extends State<Settings> {
   void SaveSettings() {
     print(this._selectedCountry);
     print(this._selectedState);
+    _write(this._selectedCountry + ":" + this._selectedState);
+  }
+
+  _write(String text) async {
+    final Directory directory = await getApplicationDocumentsDirectory();
+    final File file = File('${directory.path}/settings.txt');
+    await file.writeAsString(text);
   }
 }
