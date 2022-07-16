@@ -4,3 +4,10 @@ flutter run --no-sound-null-safety
 flutter clean
 
 flutter pub get
+
+
+- nella registrazione aggiungere età e sesso per la raccolta dati, salvarlo su firebase
+- data la posizione aggiorno il cursore sulla mappa
+- operazioni di CRUD sulla request, ogni vlta che si clicca su  GO, la ricerca deve essere salvata su firebase
+- far dialogare flutter con postgres 
+- realizzare pannello amministratore
