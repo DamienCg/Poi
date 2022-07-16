@@ -1,5 +1,6 @@
 //ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,12 +21,16 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmpasswordController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _ageController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmpasswordController.dispose();
+    _nameController.dispose();
+    _ageController.dispose();
     super.dispose();
   }
 
@@ -44,9 +49,20 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text.trim(),
       );
 
+      addUserDetails(
+          _nameController.text.trim(), int.parse(_ageController.text.trim()));
+
       // pop the loading circle
       Navigator.of(context).pop();
     }
+  }
+
+// SALVO i dati su firebase!
+  Future addUserDetails(String name, int age) async {
+    await FirebaseFirestore.instance.collection('users').add({
+      'Name': name,
+      'Age': age,
+    });
   }
 
   bool passwordConfirmed() {
@@ -90,6 +106,50 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 SizedBox(height: 50),
+
+                //Name textfield
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextField(
+                    controller: _nameController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: 'Name',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                //Age textfield
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: TextField(
+                    controller: _ageController,
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.deepPurple),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      hintText: 'Age',
+                      fillColor: Colors.grey[200],
+                      filled: true,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10),
 
                 //email textfield
                 Padding(
