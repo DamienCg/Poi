@@ -15,7 +15,11 @@ class _MapsPageState extends State<MapsPage> {
         point: new LatLng(44.50, 11.33),
         builder: (context) => new Container(
               child: IconButton(
-                  icon: Icon(Icons.add_location_alt_outlined),
+                  icon: Icon(
+                    Icons.add_location_alt_rounded,
+                    color: Colors.deepPurple,
+                    size: 32,
+                  ),
                   onPressed: () {
                     print('Marker tapped!');
                   }),
@@ -26,7 +30,11 @@ class _MapsPageState extends State<MapsPage> {
         point: new LatLng(44.49, 11.31),
         builder: (context) => new Container(
               child: IconButton(
-                  icon: Icon(Icons.add_location_alt_outlined),
+                  icon: Icon(
+                    Icons.person_pin,
+                    color: Colors.blueAccent,
+                    size: 42,
+                  ),
                   onPressed: () {
                     print('Marker tapped!');
                   }),
