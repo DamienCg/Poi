@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../location_service.dart';
 
 class MapsPage extends StatefulWidget {
+  static double lat = 0;
+  static double long = 0;
   @override
   _MapsPageState createState() => _MapsPageState();
 }
 
+void getLocation() async {
+  final service = LocationService();
+  final locationData = await service.getLocation();
+
+  if (locationData != null) {
+    MapsPage.lat = locationData.latitude!;
+    MapsPage.long = locationData.longitude!;
+  }
+}
+
 class _MapsPageState extends State<MapsPage> {
+  _MapsPageState() {
+    getLocation();
+  }
   List<Marker> ListOfMarkers = [
+    /*
     new Marker(
         width: 45.0,
         height: 45.0,
@@ -24,10 +41,11 @@ class _MapsPageState extends State<MapsPage> {
                     print('Marker tapped!');
                   }),
             )),
+            */
     new Marker(
         width: 45.0,
         height: 45.0,
-        point: new LatLng(44.49, 11.31),
+        point: new LatLng(MapsPage.lat, MapsPage.long),
         builder: (context) => new Container(
               child: IconButton(
                   icon: Icon(

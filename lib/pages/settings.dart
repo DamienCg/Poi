@@ -171,9 +171,12 @@ class _MySettingsState extends State<Settings> {
   }
 
   void SaveSettings() {
-    print(this._selectedCountry);
-    print(this._selectedState);
     _write(this._selectedCountry + ":" + this._selectedState);
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Saved"),
+            ));
   }
 
   _write(String text) async {

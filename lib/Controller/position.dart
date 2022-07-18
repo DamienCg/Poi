@@ -13,15 +13,10 @@ class Position {
 
   @override
   String toString() {
-    return "Point(Lat: $lat, Long: $long)";
+    return "\"" + lat.toString() + "-" + long.toString() + "\"";
   }
 
-  void printPosition() {
-    print("Lat: " + this.lat.toString());
-    print("Long: " + this.long.toString());
-  }
-
-  Position Dummyupdate(String privacydetail) {
+  String Dummyupdate(String privacydetail) {
     int dummy = int.parse(privacydetail);
     Random r = new Random();
     List<Position> dummyPosition = new List.empty(growable: true);
@@ -40,25 +35,10 @@ class Position {
         dummyPosition.add(randomValue);
     }
 
-    //TODO invio dummyPosition per risposta query spaziali
-    // mi prendo solo il risultato della risposta reale
-    print("All position: ");
-    print(dummyPosition);
-    print("Real position: ");
-    print(dummyPosition.elementAt(RealPositionIndex).lat.toString() +
-        " " +
-        dummyPosition.elementAt(RealPositionIndex).long.toString());
-
-    return RealPosition;
+    return dummyPosition.toString();
   }
 
-/*
-pertubation:
-non invio il dato reale ma faccio camuffaggio, non invio un dato reale ma faccio trocamento
-invece di inviare un dato con 10 cifre dopo la virgola invio un dato con 3 cifre dopo la virgola
-oppure faccio sostituzione casuale di alcune cifre.
-*/
-  Position Perturbation(String privacydetail) {
+  String Perturbation(String privacydetail) {
     int digits = int.parse(privacydetail);
     double lat = this.lat;
     double long = this.long;
@@ -84,6 +64,6 @@ oppure faccio sostituzione casuale di alcune cifre.
 
     print(finalLat);
     print(finalLong);
-    return new Position(finalLat, finalLong);
+    return "[\"" + finalLat.toString() + "-" + finalLong.toString() + "\"]";
   }
 }

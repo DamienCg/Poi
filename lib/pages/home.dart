@@ -9,10 +9,14 @@ class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   @override
-  State<Home> createState() => _HomeState();
+  State<Home> createState() => _HomeState(1);
 }
 
 class _HomeState extends State<Home> {
+  _HomeState(int index) {
+    this.currentIndex = index;
+  }
+
   int currentIndex = 0;
 
   List<Widget> pages = [

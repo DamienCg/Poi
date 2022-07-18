@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:poi/location_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:poi/Controller/position.dart';
+import 'package:poi/pages/home.dart';
 
 class RequestPage extends StatefulWidget {
   @override
@@ -155,8 +157,6 @@ class _RequestPageState extends State<RequestPage> {
 
     if (locationData != null) {
       setState(() {
-        //lat = locationData.latitude!.toStringAsFixed(4);
-        //long = locationData.longitude!.toStringAsFixed(4);
         lat = locationData.latitude!.toString();
         long = locationData.longitude!.toString();
       });
@@ -164,9 +164,27 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   void SaveLatLong() {
-    print(this.lat);
-    print(this.long);
     _read();
+    Home homeMaps = new Home();
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => homeMaps));
+  }
+
+  // SALVO i dati su firebase!
+  Future addRequestToFirebase(
+    String locationrequest,
+    String poicategory,
+    String privacy,
+    String privacyDetails,
+    int rank,
+  ) async {
+    await FirebaseFirestore.instance.collection('request').add({
+      'Location Request': locationrequest,
+      'Poi Category': poicategory,
+      'Privacy': privacy,
+      'Privacy Details': privacyDetails,
+      'Rank': rank,
+    });
   }
 
   Future<String> _read() async {
@@ -189,9 +207,23 @@ class _RequestPageState extends State<RequestPage> {
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
     String privacydetail = text.split(":").last;
-    if (privacyCategory == "GPS perturbation")
-      position.Perturbation(privacydetail);
-    if (privacyCategory == "Dummy update") position.Dummyupdate(privacydetail);
+    if (privacyCategory == "GPS perturbation") {
+      addRequestToFirebase(position.Perturbation(privacydetail), value!,
+          privacyCategory, privacydetail, int.parse(value2!));
+    }
+    if (privacyCategory == "Dummy update") {
+      addRequestToFirebase(position.Dummyupdate(privacydetail), value!,
+          privacyCategory, privacydetail, int.parse(value2!));
+    }
+    if (privacyCategory == "No privacy") {
+      addRequestToFirebase(
+          "[ \"" + lat!.toString() + "-" + long!.toString() + "\"]",
+          value!,
+          privacyCategory,
+          "",
+          int.parse(value2!));
+    }
+
     return text;
   }
 }

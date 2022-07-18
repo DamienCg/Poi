@@ -49,8 +49,8 @@ class _RegisterPageState extends State<RegisterPage> {
         password: _passwordController.text.trim(),
       );
 
-      addUserDetails(
-          _nameController.text.trim(), int.parse(_ageController.text.trim()));
+      addUserDetails(_nameController.text.trim(),
+          int.parse(_ageController.text.trim()), _emailController.text.trim());
 
       // pop the loading circle
       Navigator.of(context).pop();
@@ -58,10 +58,11 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
 // SALVO i dati su firebase!
-  Future addUserDetails(String name, int age) async {
+  Future addUserDetails(String name, int age, String email) async {
     await FirebaseFirestore.instance.collection('users').add({
       'Name': name,
       'Age': age,
+      'Email': email,
     });
   }
 
