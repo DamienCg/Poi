@@ -178,12 +178,14 @@ class _RequestPageState extends State<RequestPage> {
     String privacyDetails,
     int rank,
   ) async {
+    DateTime dateTime = DateTime.now();
     await FirebaseFirestore.instance.collection('request').add({
       'Location Request': locationrequest,
       'Poi Category': poicategory,
       'Privacy': privacy,
       'Privacy Details': privacyDetails,
       'Rank': rank,
+      'DateTime': dateTime.toString(),
     });
   }
 
