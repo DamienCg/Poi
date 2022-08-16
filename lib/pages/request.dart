@@ -5,6 +5,29 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:poi/Controller/position.dart';
 import 'package:poi/pages/home.dart';
+import 'package:postgres/postgres.dart';
+
+void postgresConnect(String category, String rank) async {
+  if (category != null && rank != null) {
+    final conn = PostgreSQLConnection(
+      '10.0.2.2',
+      5432,
+      'postgres',
+      username: 'postgres',
+      password: '9964',
+    );
+    await conn.open();
+    String query = 'select * from ' +
+        category.toLowerCase() +
+        ' x' +
+        ' where x."rank" >= ' +
+        rank;
+    print(query);
+    var results = await conn.query(query);
+    print(results);
+    await conn.close();
+  }
+}
 
 class RequestPage extends StatefulWidget {
   @override
@@ -17,7 +40,7 @@ class _RequestPageState extends State<RequestPage> {
     'Park',
     'Theater',
     'Museum',
-    'Department'
+    'Departement'
   ];
   final rankPosition = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
@@ -190,6 +213,7 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<String> _read() async {
+    postgresConnect(value!, value2!);
     String text = "";
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
@@ -227,5 +251,13 @@ class _RequestPageState extends State<RequestPage> {
     }
 
     return text;
+  }
+
+  void showThings() {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text("Nothig to Show"),
+            ));
   }
 }

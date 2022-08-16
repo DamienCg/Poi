@@ -5,6 +5,8 @@ flutter clean
 
 flutter pub get
 
+docker-compose up -d
+
 
 - nella registrazione aggiungere età e sesso per la raccolta dati, salvarlo su firebase
 - data la posizione aggiorno il cursore sulla mappa

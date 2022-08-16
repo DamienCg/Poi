@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:poi/settingsClass.dart';
 import 'dart:io';
 
 class Settings extends StatefulWidget {
@@ -13,7 +12,7 @@ class Settings extends StatefulWidget {
 
 class _MySettingsState extends State<Settings> {
   final user = FirebaseAuth.instance.currentUser!;
-  String _selectedCountry = "No privacy";
+  String _selectedPrivacy = "No privacy";
   String SecondElementPrivacy = "Ok, No privacy, let's go! ";
 
   var privacy = {
@@ -22,14 +21,14 @@ class _MySettingsState extends State<Settings> {
     'GPS perturbation': 'GPSP'
   };
 
-  List _countries = [];
-  CountryDependentDropDown() {
+  List _listprivacy = [];
+  privacyDependentDropDown() {
     privacy.forEach((key, value) {
-      _countries.add(key);
+      _listprivacy.add(key);
     });
   }
 
-  String _selectedState = "Nothing to select";
+  String privacyDetails = "Nothing to select";
   var state = {
     'Nothing to select': 'NP',
     '5': 'DU',
@@ -43,28 +42,28 @@ class _MySettingsState extends State<Settings> {
   };
 
   List _states = [];
-  StateDependentDropDown(countryShortName) {
-    if (countryShortName == "NP") {
+  privacy2DependentDropDown(privacyShortName) {
+    if (privacyShortName == "NP") {
       this.SecondElementPrivacy = "Ok, No privacy, let's go! ";
     }
-    if (countryShortName == "DU") {
+    if (privacyShortName == "DU") {
       this.SecondElementPrivacy = "Select number of dummy update";
     }
-    if (countryShortName == "GPSP")
+    if (privacyShortName == "GPSP")
       this.SecondElementPrivacy = "Select Perturbation digit";
 
     state.forEach((key, value) {
-      if (countryShortName == value) {
+      if (privacyShortName == value) {
         _states.add(key);
       }
     });
-    _selectedState = _states[0];
+    privacyDetails = _states[0];
   }
 
   @override
   void initState() {
     super.initState();
-    CountryDependentDropDown();
+    privacyDependentDropDown();
   }
 
   @override
@@ -88,15 +87,15 @@ class _MySettingsState extends State<Settings> {
             Container(
               width: 400,
               child: DropdownButton(
-                value: _selectedCountry,
+                value: _selectedPrivacy,
                 onChanged: (newValue) {
                   setState(() {
                     _states = [];
-                    StateDependentDropDown(privacy[newValue]);
-                    _selectedCountry = "$newValue";
+                    privacy2DependentDropDown(privacy[newValue]);
+                    _selectedPrivacy = "$newValue";
                   });
                 },
-                items: _countries.map((country) {
+                items: _listprivacy.map((country) {
                   return DropdownMenuItem(
                     child: new Text(country),
                     value: country,
@@ -116,10 +115,10 @@ class _MySettingsState extends State<Settings> {
             Container(
               width: 400,
               child: DropdownButton(
-                value: _selectedState,
+                value: privacyDetails,
                 onChanged: (newValue) {
                   setState(() {
-                    _selectedState = "$newValue";
+                    privacyDetails = "$newValue";
                   });
                 },
                 items: _states.map((state) {
@@ -171,7 +170,7 @@ class _MySettingsState extends State<Settings> {
   }
 
   void SaveSettings() {
-    _write(this._selectedCountry + ":" + this._selectedState);
+    _write(this._selectedPrivacy + ":" + this.privacyDetails);
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
