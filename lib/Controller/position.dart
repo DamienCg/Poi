@@ -25,9 +25,9 @@ class Position {
 
     for (var i = 0; i < dummy; i++) {
       double randomLat =
-          (lat - 0.3) + ((lat + 0.3) - (lat - 0.3)) * r.nextDouble();
+          (lat - 0.015) + ((lat + 0.015) - (lat - 0.015)) * r.nextDouble();
       double randomLong =
-          (long - 0.3) + ((long + 0.3) - (long - 0.3)) * r.nextDouble();
+          (long - 0.015) + ((long + 0.015) - (long - 0.015)) * r.nextDouble();
       Position randomValue = Position(randomLat, randomLong);
       if (i == RealPositionIndex)
         dummyPosition.add(RealPosition);
@@ -62,8 +62,6 @@ class Position {
         r.nextInt(9).toString() +
         LongAfterPoint.toString().substring(digits + 1));
 
-    print(finalLat);
-    print(finalLong);
     return "[\"" + finalLat.toString() + "-" + finalLong.toString() + "\"]";
   }
 }

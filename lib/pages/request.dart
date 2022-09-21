@@ -7,6 +7,13 @@ import 'package:poi/Controller/position.dart';
 import 'package:poi/pages/home.dart';
 import 'package:postgres/postgres.dart';
 
+_write(String text) async {
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final File file = File('${directory.path}/request.txt');
+  await file.writeAsString(text);
+  print("Stro scrivendo:" + text);
+}
+
 void postgresConnect(String category, String rank) async {
   if (category != null && rank != null) {
     final conn = PostgreSQLConnection(
@@ -25,6 +32,7 @@ void postgresConnect(String category, String rank) async {
     print(query);
     var results = await conn.query(query);
     print(results);
+    _write(results.toString());
     await conn.close();
   }
 }
@@ -36,7 +44,7 @@ class RequestPage extends StatefulWidget {
 
 class _RequestPageState extends State<RequestPage> {
   final poiCategory = [
-    'Historical Building',
+    'Historical',
     'Park',
     'Theater',
     'Museum',
@@ -228,7 +236,6 @@ class _RequestPageState extends State<RequestPage> {
                 content: Text("First you need to set your privacy preferences"),
               ));
     }
-    print(text);
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;

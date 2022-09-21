@@ -1,11 +1,17 @@
+import 'dart:io';
+import 'package:poi/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../location_service.dart';
+import 'package:path_provider/path_provider.dart';
 
 class MapsPage extends StatefulWidget {
   static double lat = 0;
   static double long = 0;
+  static double Poilat = 0;
+  static double Poilong = 0;
+  static String PoiName = "";
   @override
   _MapsPageState createState() => _MapsPageState();
 }
@@ -20,16 +26,29 @@ void getLocation() async {
   }
 }
 
+Future<void> _read() async {
+  String text = "";
+  final Directory directory = await getApplicationDocumentsDirectory();
+  final File file = File('${directory.path}/request.txt');
+  text = await file.readAsString();
+  MapsPage.Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
+  MapsPage.Poilong = double.parse(text.split(",")[1]);
+  MapsPage.PoiName = text.split(",")[5];
+}
+
 class _MapsPageState extends State<MapsPage> {
   _MapsPageState() {
     getLocation();
+    _read();
+    //TODO LEGGO il file request.txt
+    //inserisco i dati in variabili come ho fatto con la posizione corrente
+    // visualizzo solo un marker, il poi richiesto più vicino!!
   }
   List<Marker> ListOfMarkers = [
-    /*
     new Marker(
         width: 45.0,
         height: 45.0,
-        point: new LatLng(44.50, 11.33),
+        point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
         builder: (context) => new Container(
               child: IconButton(
                   icon: Icon(
@@ -38,10 +57,13 @@ class _MapsPageState extends State<MapsPage> {
                     size: 32,
                   ),
                   onPressed: () {
-                    print('Marker tapped!');
+                    showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: Text(MapsPage.PoiName),
+                            ));
                   }),
             )),
-            */
     new Marker(
         width: 45.0,
         height: 45.0,

@@ -41,6 +41,13 @@ class _MySettingsState extends State<Settings> {
     '2': 'GPSP',
   };
 
+  var state2 = {
+    'Nothing to select': 'NP',
+    '500 mt range': 'DU',
+    '1 km range': 'DU',
+    '1.5 km range': 'DU',
+  };
+
   List _states = [];
   privacy2DependentDropDown(privacyShortName) {
     if (privacyShortName == "NP") {

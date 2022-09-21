@@ -4,7 +4,8 @@ import random
 import geopy.distance
 from meteostat import Point, Daily
 
-NUM_RUNS = 50
+
+NUM_RUNS = 500
 NUM_DIGITS = 3
 LAT_ORIG = 44.99396098265174
 LONG_ORIG = 11.342755232742132
@@ -46,8 +47,10 @@ def perturbate(digit):
     return latNew, longNew
 
 
+
 numReplies = 0
 tempOrig = getTempValue(LAT_ORIG, LONG_ORIG)
+
 
 for run in range(0, NUM_RUNS):
     for digit in range(0, NUM_DIGITS):
@@ -60,7 +63,20 @@ for run in range(0, NUM_RUNS):
             qosMetric[digit] += (tempDiff * tempDiff)
             numReplies += 1
 
+kmperdigit = []
+
 for digit in range(0, NUM_DIGITS):
     privacyMetric[digit] = privacyMetric[digit] / numReplies
     qosMetric[digit] = qosMetric[digit] * 1.0 / numReplies
+    kmperdigit.append(privacyMetric[digit])
     print(" Perturbation digit: %d Privacy (km): %f QoS (d^2): %f" % (digit, privacyMetric[digit], qosMetric[digit]))
+
+
+
+MDigit = ['P.Digit 0', 'P.Digit 1', 'P.Digit 2']
+Km_Per_Digit = [kmperdigit[0], kmperdigit[1], kmperdigit[2]]
+plt.bar(MDigit, Km_Per_Digit)
+plt.title('Difference in KM Original-Pertubation - 500 runs')
+plt.xlabel('Number of Digit')
+plt.ylabel('km difference')
+plt.show()
