@@ -13,7 +13,7 @@ class Position {
 
   @override
   String toString() {
-    return "\"" + lat.toString() + "-" + long.toString() + "\"";
+    return lat.toString() + ":" + long.toString();
   }
 
   String Dummyupdate(String privacydetail) {
@@ -35,7 +35,13 @@ class Position {
         dummyPosition.add(randomValue);
     }
 
-    return dummyPosition.toString();
+    var latmean = dummyPosition.map((m) => m.lat).reduce((a, b) => a + b) /
+        dummyPosition.length;
+
+    var longmean = dummyPosition.map((m) => m.long).reduce((a, b) => a + b) /
+        dummyPosition.length;
+
+    return latmean.toString() + ":" + longmean.toString();
   }
 
   String Perturbation(String privacydetail) {
@@ -62,6 +68,6 @@ class Position {
         r.nextInt(9).toString() +
         LongAfterPoint.toString().substring(digits + 1));
 
-    return "[\"" + finalLat.toString() + "-" + finalLong.toString() + "\"]";
+    return finalLat.toString() + ":" + finalLong.toString();
   }
 }

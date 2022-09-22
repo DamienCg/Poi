@@ -6,12 +6,22 @@ import 'dart:io';
 import 'package:poi/Controller/position.dart';
 import 'package:poi/pages/home.dart';
 import 'package:postgres/postgres.dart';
+import 'dart:math' show cos, sqrt, asin;
 
 _write(String text) async {
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
   await file.writeAsString(text);
   print("Stro scrivendo:" + text);
+}
+
+double calculateDistance(lat1, lon1, lat2, lon2) {
+  var p = 0.017453292519943295;
+  var c = cos;
+  var a = 0.5 -
+      c((lat2 - lat1) * p) / 2 +
+      c(lat1 * p) * c(lat2 * p) * (1 - c((lon2 - lon1) * p)) / 2;
+  return 12742 * asin(sqrt(a));
 }
 
 void postgresConnect(String category, String rank) async {
@@ -32,6 +42,12 @@ void postgresConnect(String category, String rank) async {
     print(query);
     var results = await conn.query(query);
     print(results);
+
+    results.forEach((element) {
+      print("elemento: ");
+      print(element.toString());
+    });
+
     _write(results.toString());
     await conn.close();
   }
@@ -60,6 +76,7 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   void initState() {
+    print("InitState");
     super.initState();
     getLocation();
   }
@@ -185,11 +202,15 @@ class _RequestPageState extends State<RequestPage> {
   void getLocation() async {
     final service = LocationService();
     final locationData = await service.getLocation();
+    print("getLocation");
 
     if (locationData != null) {
       setState(() {
+        print("setState");
         lat = locationData.latitude!.toString();
         long = locationData.longitude!.toString();
+        print("setState-lat: " + lat!);
+        print("setState-long: " + long!);
       });
     }
   }
@@ -241,6 +262,7 @@ class _RequestPageState extends State<RequestPage> {
     String privacyCategory = text.split(":").first;
     String privacydetail = text.split(":").last;
     if (privacyCategory == "GPS perturbation") {
+      //TODO salvare anche la risposta! sopra riga 245
       addRequestToFirebase(position.Perturbation(privacydetail), value!,
           privacyCategory, privacydetail, int.parse(value2!));
     }
@@ -249,12 +271,8 @@ class _RequestPageState extends State<RequestPage> {
           privacyCategory, privacydetail, int.parse(value2!));
     }
     if (privacyCategory == "No privacy") {
-      addRequestToFirebase(
-          "[ \"" + lat!.toString() + "-" + long!.toString() + "\"]",
-          value!,
-          privacyCategory,
-          "",
-          int.parse(value2!));
+      addRequestToFirebase(lat!.toString() + ":" + long!.toString(), value!,
+          privacyCategory, "", int.parse(value2!));
     }
 
     return text;

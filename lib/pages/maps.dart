@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:poi/pages/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -26,7 +25,7 @@ void getLocation() async {
   }
 }
 
-Future<void> _read() async {
+Future<String> _read() async {
   String text = "";
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
@@ -34,52 +33,62 @@ Future<void> _read() async {
   MapsPage.Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
   MapsPage.Poilong = double.parse(text.split(",")[1]);
   MapsPage.PoiName = text.split(",")[5];
+  return MapsPage.PoiName;
 }
 
 class _MapsPageState extends State<MapsPage> {
   _MapsPageState() {
-    getLocation();
-    _read();
-    //TODO LEGGO il file request.txt
-    //inserisco i dati in variabili come ho fatto con la posizione corrente
-    // visualizzo solo un marker, il poi richiesto più vicino!!
+    print("mapsPageState");
   }
-  List<Marker> ListOfMarkers = [
-    new Marker(
-        width: 45.0,
-        height: 45.0,
-        point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
-        builder: (context) => new Container(
-              child: IconButton(
-                  icon: Icon(
-                    Icons.add_location_alt_rounded,
-                    color: Colors.deepPurple,
-                    size: 32,
-                  ),
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                              title: Text(MapsPage.PoiName),
-                            ));
-                  }),
-            )),
-    new Marker(
-        width: 45.0,
-        height: 45.0,
-        point: new LatLng(MapsPage.lat, MapsPage.long),
-        builder: (context) => new Container(
-              child: IconButton(
-                  icon: Icon(
-                    Icons.person_pin,
-                    color: Colors.blueAccent,
-                    size: 42,
-                  ),
-                  onPressed: () {
-                    print('Marker tapped!');
-                  }),
-            ))
-  ];
+
+  List<Marker> ListOfMarkers = new List.empty(growable: true);
+
+  @override
+  void initState() {
+    print("InitStateMaps");
+    getLocation();
+
+    _read();
+
+    List<Marker> ListOfMarkers2 = [
+      new Marker(
+          width: 45.0,
+          height: 45.0,
+          point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
+          builder: (context) => new Container(
+                child: IconButton(
+                    icon: Icon(
+                      Icons.add_location_alt_rounded,
+                      color: Colors.deepPurple,
+                      size: 32,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(MapsPage.PoiName),
+                              ));
+                    }),
+              )),
+      new Marker(
+          width: 45.0,
+          height: 45.0,
+          point: new LatLng(MapsPage.lat, MapsPage.long),
+          builder: (context) => new Container(
+                child: IconButton(
+                    icon: Icon(
+                      Icons.person_pin,
+                      color: Colors.blueAccent,
+                      size: 42,
+                    ),
+                    onPressed: () {
+                      print('Marker tapped!');
+                    }),
+              ))
+    ];
+
+    ListOfMarkers = ListOfMarkers2;
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
