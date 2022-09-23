@@ -16,78 +16,77 @@ class MapsPage extends StatefulWidget {
 }
 
 void getLocation() async {
-  final service = LocationService();
+  final service = await LocationService();
   final locationData = await service.getLocation();
 
   if (locationData != null) {
     MapsPage.lat = locationData.latitude!;
     MapsPage.long = locationData.longitude!;
   }
+
+  await _read();
 }
 
 Future<String> _read() async {
+  print("****1***");
   String text = "";
   final Directory directory = await getApplicationDocumentsDirectory();
-  final File file = File('${directory.path}/request.txt');
+  print("****1.1***");
+  final File file = await File('${directory.path}/request.txt');
+  print("****1.2***");
   text = await file.readAsString();
+  print("Testo che sto leggendo da maps: " + text);
   MapsPage.Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
   MapsPage.Poilong = double.parse(text.split(",")[1]);
   MapsPage.PoiName = text.split(",")[5];
+  print("****2***");
   return MapsPage.PoiName;
 }
 
+List<Marker> ListOfMarkers = [
+  new Marker(
+      width: 45.0,
+      height: 45.0,
+      point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
+      builder: (context) => new Container(
+            child: IconButton(
+                icon: Icon(
+                  Icons.add_location_alt_rounded,
+                  color: Colors.deepPurple,
+                  size: 32,
+                ),
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: Text(MapsPage.PoiName),
+                          ));
+                }),
+          )),
+  new Marker(
+      width: 45.0,
+      height: 45.0,
+      point: new LatLng(MapsPage.lat, MapsPage.long),
+      builder: (context) => new Container(
+            child: IconButton(
+                icon: Icon(
+                  Icons.person_pin,
+                  color: Colors.blueAccent,
+                  size: 42,
+                ),
+                onPressed: () {
+                  print('Marker tapped!');
+                }),
+          ))
+];
+
 class _MapsPageState extends State<MapsPage> {
-  _MapsPageState() {
-    print("mapsPageState");
-  }
-
-  List<Marker> ListOfMarkers = new List.empty(growable: true);
-
+  _MapsPageState() {}
   @override
   void initState() {
-    print("InitStateMaps");
+    print("****0*****");
     getLocation();
-
-    _read();
-
-    List<Marker> ListOfMarkers2 = [
-      new Marker(
-          width: 45.0,
-          height: 45.0,
-          point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
-          builder: (context) => new Container(
-                child: IconButton(
-                    icon: Icon(
-                      Icons.add_location_alt_rounded,
-                      color: Colors.deepPurple,
-                      size: 32,
-                    ),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                                title: Text(MapsPage.PoiName),
-                              ));
-                    }),
-              )),
-      new Marker(
-          width: 45.0,
-          height: 45.0,
-          point: new LatLng(MapsPage.lat, MapsPage.long),
-          builder: (context) => new Container(
-                child: IconButton(
-                    icon: Icon(
-                      Icons.person_pin,
-                      color: Colors.blueAccent,
-                      size: 42,
-                    ),
-                    onPressed: () {
-                      print('Marker tapped!');
-                    }),
-              ))
-    ];
-
-    ListOfMarkers = ListOfMarkers2;
+    print("****3***");
   }
 
   @override

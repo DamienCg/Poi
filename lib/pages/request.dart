@@ -12,8 +12,10 @@ _write(String text) async {
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
   await file.writeAsString(text);
-  print("Stro scrivendo:" + text);
 }
+
+String globalresponse = "";
+String globalbestdistance = "";
 
 double calculateDistance(lat1, lon1, lat2, lon2) {
   var p = 0.017453292519943295;
@@ -24,9 +26,10 @@ double calculateDistance(lat1, lon1, lat2, lon2) {
   return 12742 * asin(sqrt(a));
 }
 
-void postgresConnect(String category, String rank) async {
+Future<void> postgresConnect(
+    String category, String rank, String positionAfterprivacy) async {
   if (category != null && rank != null) {
-    final conn = PostgreSQLConnection(
+    final conn = await PostgreSQLConnection(
       '10.0.2.2',
       5432,
       'postgres',
@@ -39,16 +42,26 @@ void postgresConnect(String category, String rank) async {
         ' x' +
         ' where x."rank" >= ' +
         rank;
-    print(query);
     var results = await conn.query(query);
-    print(results);
 
+    double bestDistance = 2000;
     results.forEach((element) {
-      print("elemento: ");
       print(element.toString());
+
+      double currentDistance = calculateDistance(
+          double.parse(element[0]),
+          double.parse(element[1]),
+          double.parse(positionAfterprivacy.split(":")[0]),
+          double.parse(positionAfterprivacy.split(":")[1]));
+
+      if (currentDistance < bestDistance) {
+        bestDistance = currentDistance;
+        globalresponse = element.toString();
+        globalbestdistance = bestDistance.toString();
+      }
     });
 
-    _write(results.toString());
+    await _write(globalresponse.toString());
     await conn.close();
   }
 }
@@ -76,7 +89,6 @@ class _RequestPageState extends State<RequestPage> {
 
   @override
   void initState() {
-    print("InitState");
     super.initState();
     getLocation();
   }
@@ -202,15 +214,11 @@ class _RequestPageState extends State<RequestPage> {
   void getLocation() async {
     final service = LocationService();
     final locationData = await service.getLocation();
-    print("getLocation");
 
     if (locationData != null) {
       setState(() {
-        print("setState");
         lat = locationData.latitude!.toString();
         long = locationData.longitude!.toString();
-        print("setState-lat: " + lat!);
-        print("setState-long: " + long!);
       });
     }
   }
@@ -224,12 +232,13 @@ class _RequestPageState extends State<RequestPage> {
 
   // SALVO i dati su firebase!
   Future addRequestToFirebase(
-    String locationrequest,
-    String poicategory,
-    String privacy,
-    String privacyDetails,
-    int rank,
-  ) async {
+      String locationrequest,
+      String poicategory,
+      String privacy,
+      String privacyDetails,
+      int rank,
+      String globalresponse,
+      String globalbestdistance) async {
     DateTime dateTime = DateTime.now();
     await FirebaseFirestore.instance.collection('request').add({
       'Location Request': locationrequest,
@@ -238,11 +247,12 @@ class _RequestPageState extends State<RequestPage> {
       'Privacy Details': privacyDetails,
       'Rank': rank,
       'DateTime': dateTime.toString(),
+      'Response': globalresponse,
+      'Distance me-to-POI': globalbestdistance
     });
   }
 
   Future<String> _read() async {
-    postgresConnect(value!, value2!);
     String text = "";
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
@@ -262,17 +272,43 @@ class _RequestPageState extends State<RequestPage> {
     String privacyCategory = text.split(":").first;
     String privacydetail = text.split(":").last;
     if (privacyCategory == "GPS perturbation") {
-      //TODO salvare anche la risposta! sopra riga 245
-      addRequestToFirebase(position.Perturbation(privacydetail), value!,
-          privacyCategory, privacydetail, int.parse(value2!));
+      var positionAfterPertubation = position.Perturbation(privacydetail);
+      await postgresConnect(value!, value2!, positionAfterPertubation);
+
+      addRequestToFirebase(
+          positionAfterPertubation,
+          value!,
+          privacyCategory,
+          privacydetail,
+          int.parse(value2!),
+          globalresponse,
+          globalbestdistance);
     }
     if (privacyCategory == "Dummy update") {
-      addRequestToFirebase(position.Dummyupdate(privacydetail), value!,
-          privacyCategory, privacydetail, int.parse(value2!));
+      var positionAfterDummy = position.Dummyupdate(privacydetail);
+      await postgresConnect(value!, value2!, positionAfterDummy);
+
+      addRequestToFirebase(
+          positionAfterDummy,
+          value!,
+          privacyCategory,
+          privacydetail,
+          int.parse(value2!),
+          globalresponse,
+          globalbestdistance);
     }
     if (privacyCategory == "No privacy") {
-      addRequestToFirebase(lat!.toString() + ":" + long!.toString(), value!,
-          privacyCategory, "", int.parse(value2!));
+      await postgresConnect(
+          value!, value2!, lat.toString() + ":" + long.toString());
+
+      addRequestToFirebase(
+          lat!.toString() + ":" + long!.toString(),
+          value!,
+          privacyCategory,
+          "",
+          int.parse(value2!),
+          globalresponse,
+          globalbestdistance);
     }
 
     return text;
