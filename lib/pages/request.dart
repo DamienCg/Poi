@@ -9,9 +9,11 @@ import 'package:postgres/postgres.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 _write(String text) async {
+  print("Scrivo su request");
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
   await file.writeAsString(text);
+  print("Ho scritto su request");
 }
 
 String globalresponse = "";
@@ -46,8 +48,6 @@ Future<void> postgresConnect(
 
     double bestDistance = 2000;
     results.forEach((element) {
-      print(element.toString());
-
       double currentDistance = calculateDistance(
           double.parse(element[0]),
           double.parse(element[1]),
@@ -223,8 +223,8 @@ class _RequestPageState extends State<RequestPage> {
     }
   }
 
-  void SaveLatLong() {
-    _read();
+  Future<void> SaveLatLong() async {
+    await _read();
     Home homeMaps = new Home();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => homeMaps));

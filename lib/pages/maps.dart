@@ -6,87 +6,49 @@ import '../location_service.dart';
 import 'package:path_provider/path_provider.dart';
 
 class MapsPage extends StatefulWidget {
-  static double lat = 0;
-  static double long = 0;
-  static double Poilat = 0;
-  static double Poilong = 0;
-  static String PoiName = "";
   @override
   _MapsPageState createState() => _MapsPageState();
 }
 
-void getLocation() async {
-  final service = await LocationService();
+double lat = 0;
+double long = 0;
+double Poilat = 0;
+double Poilong = 0;
+String PoiName = "";
+List<Marker> ListOfMarkers = List.empty(growable: true);
+
+Future<void> getLocation() async {
+  print("read position");
+  final service = LocationService();
   final locationData = await service.getLocation();
 
   if (locationData != null) {
-    MapsPage.lat = locationData.latitude!;
-    MapsPage.long = locationData.longitude!;
+    lat = locationData.latitude!;
+    long = locationData.longitude!;
   }
-
+  print("after position");
   await _read();
 }
 
 Future<String> _read() async {
-  print("****1***");
+  print("****read***");
   String text = "";
   final Directory directory = await getApplicationDocumentsDirectory();
-  print("****1.1***");
   final File file = await File('${directory.path}/request.txt');
-  print("****1.2***");
   text = await file.readAsString();
-  print("Testo che sto leggendo da maps: " + text);
-  MapsPage.Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
-  MapsPage.Poilong = double.parse(text.split(",")[1]);
-  MapsPage.PoiName = text.split(",")[5];
-  print("****2***");
-  return MapsPage.PoiName;
+  Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
+  Poilong = double.parse(text.split(",")[1]);
+  PoiName = text.split(",")[5];
+  print("****after read***");
+  return PoiName;
 }
-
-List<Marker> ListOfMarkers = [
-  new Marker(
-      width: 45.0,
-      height: 45.0,
-      point: new LatLng(MapsPage.Poilat, MapsPage.Poilong),
-      builder: (context) => new Container(
-            child: IconButton(
-                icon: Icon(
-                  Icons.add_location_alt_rounded,
-                  color: Colors.deepPurple,
-                  size: 32,
-                ),
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: Text(MapsPage.PoiName),
-                          ));
-                }),
-          )),
-  new Marker(
-      width: 45.0,
-      height: 45.0,
-      point: new LatLng(MapsPage.lat, MapsPage.long),
-      builder: (context) => new Container(
-            child: IconButton(
-                icon: Icon(
-                  Icons.person_pin,
-                  color: Colors.blueAccent,
-                  size: 42,
-                ),
-                onPressed: () {
-                  print('Marker tapped!');
-                }),
-          ))
-];
 
 class _MapsPageState extends State<MapsPage> {
   _MapsPageState() {}
   @override
   void initState() {
-    print("****0*****");
-    getLocation();
-    print("****3***");
+    super.initState();
+    start();
   }
 
   @override
@@ -114,4 +76,52 @@ class _MapsPageState extends State<MapsPage> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
         ),
       );
+
+  Future<void> createMarker() async {
+    print("****2***");
+
+    ListOfMarkers = [
+      new Marker(
+          width: 45.0,
+          height: 45.0,
+          point: new LatLng(Poilat, Poilong),
+          builder: (context) => new Container(
+                child: IconButton(
+                    icon: Icon(
+                      Icons.add_location_alt_rounded,
+                      color: Colors.deepPurple,
+                      size: 32,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                                title: Text(PoiName),
+                              ));
+                    }),
+              )),
+      new Marker(
+          width: 45.0,
+          height: 45.0,
+          point: new LatLng(lat, long),
+          builder: (context) => new Container(
+                child: IconButton(
+                    icon: Icon(
+                      Icons.person_pin,
+                      color: Colors.blueAccent,
+                      size: 42,
+                    ),
+                    onPressed: () {
+                      print('Marker tapped!');
+                    }),
+              ))
+    ];
+    print("****3***");
+  }
+
+  Future<void> start() async {
+    print("****1***");
+    await getLocation();
+    await createMarker();
+  }
 }
