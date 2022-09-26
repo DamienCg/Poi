@@ -18,7 +18,6 @@ String PoiName = "";
 List<Marker> ListOfMarkers = List.empty(growable: true);
 
 Future<void> getLocation() async {
-  print("read position");
   final service = LocationService();
   final locationData = await service.getLocation();
 
@@ -26,12 +25,10 @@ Future<void> getLocation() async {
     lat = locationData.latitude!;
     long = locationData.longitude!;
   }
-  print("after position");
   await _read();
 }
 
 Future<String> _read() async {
-  print("****read***");
   String text = "";
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = await File('${directory.path}/request.txt');
@@ -39,7 +36,6 @@ Future<String> _read() async {
   Poilat = double.parse(text.split(",").first.replaceAll("[", ""));
   Poilong = double.parse(text.split(",")[1]);
   PoiName = text.split(",")[5];
-  print("****after read***");
   return PoiName;
 }
 
@@ -78,8 +74,6 @@ class _MapsPageState extends State<MapsPage> {
       );
 
   Future<void> createMarker() async {
-    print("****2***");
-
     ListOfMarkers = [
       new Marker(
           width: 45.0,
@@ -116,11 +110,9 @@ class _MapsPageState extends State<MapsPage> {
                     }),
               ))
     ];
-    print("****3***");
   }
 
   Future<void> start() async {
-    print("****1***");
     await getLocation();
     await createMarker();
   }

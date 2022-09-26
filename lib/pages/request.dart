@@ -9,11 +9,9 @@ import 'package:postgres/postgres.dart';
 import 'dart:math' show cos, sqrt, asin;
 
 _write(String text) async {
-  print("Scrivo su request");
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
   await file.writeAsString(text);
-  print("Ho scritto su request");
 }
 
 String globalresponse = "";
@@ -241,19 +239,20 @@ class _RequestPageState extends State<RequestPage> {
       String globalbestdistance) async {
     DateTime dateTime = DateTime.now();
     await FirebaseFirestore.instance.collection('request').add({
-      'Location Request': locationrequest,
+      'Location Request After Privacy': locationrequest,
       'Poi Category': poicategory,
       'Privacy': privacy,
       'Privacy Details': privacyDetails,
       'Rank': rank,
       'DateTime': dateTime.toString(),
       'Response': globalresponse,
-      'Distance me-to-POI': globalbestdistance
+      'Real Location Request': lat! + long!
     });
   }
 
   Future<String> _read() async {
     String text = "";
+
     try {
       final Directory directory = await getApplicationDocumentsDirectory();
       final File file = File('${directory.path}/settings.txt');
@@ -267,6 +266,7 @@ class _RequestPageState extends State<RequestPage> {
                 content: Text("First you need to set your privacy preferences"),
               ));
     }
+
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
