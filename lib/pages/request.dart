@@ -8,6 +8,8 @@ import 'package:poi/pages/home.dart';
 import 'package:postgres/postgres.dart';
 import 'dart:math' show cos, sqrt, asin;
 
+import '../Controller/PositionRequest.dart';
+
 _write(String text) async {
   final Directory directory = await getApplicationDocumentsDirectory();
   final File file = File('${directory.path}/request.txt');
@@ -212,11 +214,12 @@ class _RequestPageState extends State<RequestPage> {
   void getLocation() async {
     final service = LocationService();
     final locationData = await service.getLocation();
-
     if (locationData != null) {
       setState(() {
         lat = locationData.latitude!.toString();
         long = locationData.longitude!.toString();
+        PositionRequest.latitude = lat.toString();
+        PositionRequest.Longitude = long.toString();
       });
     }
   }
@@ -246,11 +249,12 @@ class _RequestPageState extends State<RequestPage> {
       'Rank': rank,
       'DateTime': dateTime.toString(),
       'Response': globalresponse,
-      'Real Location Request': lat! + long!
+      'Real Location Request': lat! + ":" + long!
     });
   }
 
   Future<String> _read() async {
+    print("Sono su read");
     String text = "";
 
     try {
@@ -266,7 +270,6 @@ class _RequestPageState extends State<RequestPage> {
                 content: Text("First you need to set your privacy preferences"),
               ));
     }
-
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;

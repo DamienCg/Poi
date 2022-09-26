@@ -25,7 +25,6 @@ Future<void> getLocation() async {
     lat = locationData.latitude!;
     long = locationData.longitude!;
   }
-  await _read();
 }
 
 Future<String> _read() async {
@@ -106,14 +105,20 @@ class _MapsPageState extends State<MapsPage> {
                       size: 42,
                     ),
                     onPressed: () {
-                      print('Marker tapped!');
+                      print('Me');
                     }),
               ))
     ];
+    //TODO RELOAD PAGE!
   }
 
   Future<void> start() async {
-    await getLocation();
-    await createMarker();
+    try {
+      await getLocation();
+      await _read();
+      await createMarker();
+    } catch (e) {
+      print(e);
+    }
   }
 }
