@@ -90,7 +90,6 @@ class _RequestPageState extends State<RequestPage> {
   @override
   void initState() {
     super.initState();
-    getLocation();
   }
 
   @override
@@ -211,7 +210,7 @@ class _RequestPageState extends State<RequestPage> {
         ),
       );
 
-  void getLocation() async {
+  Future<void> getLocation() async {
     final service = LocationService();
     final locationData = await service.getLocation();
     if (locationData != null) {
@@ -225,6 +224,7 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<void> SaveLatLong() async {
+    await getLocation();
     await _read();
     Home homeMaps = new Home();
     Navigator.of(context)
@@ -269,6 +269,9 @@ class _RequestPageState extends State<RequestPage> {
                 title: Text("Alert!"),
                 content: Text("First you need to set your privacy preferences"),
               ));
+    }
+    if (this.lat == null || this.long == null) {
+      getLocation();
     }
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
