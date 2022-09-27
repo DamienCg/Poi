@@ -120,5 +120,6 @@ class _MapsPageState extends State<MapsPage> {
     } catch (e) {
       print(e);
     }
+    setState(() {});
   }
 }
