@@ -1,6 +1,13 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import psycopg2
+
+connPostgress = psycopg2.connect(database="postgres",
+                        host="localhost",
+                        user="postgres",
+                        password="9964",
+                        port="5432")
 
 # Fetch the service account key JSON file contents
 cred = credentials.Certificate('secret_key.json')
@@ -32,12 +39,21 @@ for doc in docs:
 """
 
 # Query Read
-
+query = "SELECT name FROM "
 docs = db.collection("request").where('Privacy', '!=','No privacy').stream()
-my_dict = 0
 for doc in docs:
     print('{} => {}'.format(doc.id,doc.to_dict()))
-    print(doc.get("Privacy"))
+    dict = doc.to_dict()
+    query += dict.get("Poi Category")
+    print(query)
+    break
+
+
+cursor = connPostgress.cursor()
+cursor.execute(query)
+print(cursor.fetchall())
+
+
 
 
 
