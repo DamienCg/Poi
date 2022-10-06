@@ -51,9 +51,13 @@ bestdistance = 100
 nameofbestdistance = ""
 Reallatitudereq = ""
 Reallongitudereq =""
-docs = db.collection("request").where('Privacy','==','GPS perturbation').where('`Privacy Details`', '==','2').stream()
 
-docs = db.collection("request").where('Privacy','==','Dummy update').where('`Privacy Details`', '==','25').stream()
+#docs = db.collection("request").where('Privacy','==','GPS perturbation').stream()
+#docs = db.collection("request").where('Privacy','==','Dummy update').stream()
+# .where('`Privacy Details`', '==','2')
+# .where('`Privacy Details`', '==','20')
+#docs = db.collection("request").where('Privacy','!=','No privacy').stream()
+docs = db.collection("request").stream()
 
 
 for doc in docs:
@@ -91,9 +95,25 @@ print("Accuratezza del sistema: "+str((countYes)/(countYes+countNO)))
 
 
 """
-250 Totali con accuratezza del 76%
-153 perturbation con accuratezza 64%
-97 Dummy update con accuratezza  96%
+Accuratezza totale sistema (350 richieste): 0.81%
+
+Accuratezza No privacy (20 richieste): 100%
+
+330 Totali del sistema con meccanismi privacy dummy or pertubation 
+con accuratezza del 80%
+
+160 perturbation tutali con accuratezza 63%
+- Digit 0 -> 50 richieste -> accuratezza 36%
+- Digit 1 -> 60 richieste -> accuratezza 57%
+- Digit 2 -> 50 richieste -> accuratezza 98%
+
+
+170 Dummy update totali con accuratezza  96%
+- Dummy 5 -> 30 richieste -> con accuratezza 96%
+- Dummy 10 -> 30 richieste -> con accuratezza 97%
+- Dummy 15 -> 40 richieste -> con accuratezza 97.5%
+- Dummy 20 -> 20 richieste -> con accuratezza 100%
+- Dummy 25 -> 50  richieste -> con accuratezza 94%
 
 
 """

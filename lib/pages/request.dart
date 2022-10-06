@@ -273,24 +273,6 @@ class _RequestPageState extends State<RequestPage> {
     if (this.lat == null || this.long == null) {
       getLocation();
     }
-    //modifica lat e long
-    //*******************/
-
-    print("Real position: " + lat.toString() + " " + long.toString());
-
-    Position temp_position =
-        new Position(double.parse(this.lat!), double.parse(this.long!));
-    String real_pos_after_pert = temp_position.Perturbation("1");
-
-    lat = real_pos_after_pert.split(":")[0];
-    long = real_pos_after_pert.split(":")[1];
-    print("Real position After pertubation: " +
-        lat.toString() +
-        " " +
-        long.toString());
-
-    /************/
-    // end generatore random
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
