@@ -3,11 +3,30 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 import psycopg2
 import geopy.distance
+import matplotlib.pyplot as plt
+import statistics
+from math import sqrt
 
 def gpsDistance(lat1, long1, lat2, long2):
     pointOne = (lat1, long1)
     pointTwo = (lat2, long2)
     return geopy.distance.geodesic(pointOne, pointTwo).km
+
+def plot_confidence_interval(x, values, z=1.96, color='#2187bb', horizontal_line_width=0.25):
+    mean = statistics.mean(values)
+    stdev = statistics.stdev(values)
+    confidence_interval = z * stdev / sqrt(len(values))
+
+    left = x - horizontal_line_width / 2
+    top = mean - confidence_interval
+    right = x + horizontal_line_width / 2
+    bottom = mean + confidence_interval
+    plt.plot([x, x], [top, bottom], color=color)
+    plt.plot([left, right], [top, top], color=color)
+    plt.plot([left, right], [bottom, bottom], color=color)
+    plt.plot(x, mean, 'o', color='#f44336')
+
+    return mean, confidence_interval
 
 connPostgress = psycopg2.connect(database="postgres",
                         host="localhost",
@@ -51,18 +70,21 @@ bestdistance = 100
 nameofbestdistance = ""
 Reallatitudereq = ""
 Reallongitudereq =""
-
+a = []
 #docs = db.collection("request").where('Privacy','==','GPS perturbation').stream()
-#docs = db.collection("request").where('Privacy','==','Dummy update').stream()
+#docs = db.collection("request").where('Privacy','==','GPS perturbation').where('`Privacy Details`', '==','2').stream()
+docs = db.collection("request").where('Privacy','==','Dummy update').where('`Privacy Details`', '==','25').stream()
 # .where('`Privacy Details`', '==','2')
 # .where('`Privacy Details`', '==','20')
-#docs = db.collection("request").where('Privacy','!=','No privacy').stream()
-docs = db.collection("request").stream()
+#docs = db.collection("request").where('Privacy','==','No privacy').stream()
+#docs = db.collection("request").stream()
 
 
 for doc in docs:
     query = "SELECT name, latitude,longitude FROM "
     dict = doc.to_dict()
+    print("************")
+    print(dict)
     query += dict.get("Poi Category")
     RealLocReq = dict.get("Real Location Request")
     Reallatitudereq = RealLocReq.split(":")[0]
@@ -82,14 +104,24 @@ for doc in docs:
             bestdistance = distancetemp
             nameofbestdistance =i[0]
 
+    tempdist = bestdistance
     bestdistance = 100
-    risposta = dict.get("Response").split(",")[5].lstrip()
+    print(nameofbestdistance)
+    print("************")
+    risposta = dict.get("Response")
+    if risposta:
+        risposta =risposta.split(",")[5].lstrip()
     if nameofbestdistance == risposta:
         countYes += 1
+        tempdist = 0
     else:
-        countNO += 1
+        if risp:
+            countNO += 1
 
 
+    a.append(tempdist)
+
+a = list(filter(lambda x: x != 100, a))
 print("Numero di richieste: "+str(countYes+countNO))
 print("Accuratezza del sistema: "+str((countYes)/(countYes+countNO)))
 
@@ -117,6 +149,22 @@ con accuratezza del 80%
 
 
 """
+
+import statsmodels.stats.api as sms
+print(a)
+print(sms.DescrStatsW(a).tconfint_mean())
+Dummy5 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.369781484674313, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Dummy10 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Dummy15 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7.085164409777618, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+Dummy20 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+plt.xticks([1, 2, 3,4,5], ['Dummy 5', 'Dummy 10', 'Dummy 15','Dummy 20', 'Dummy 25',])
+plt.title('Dummy Update - Confidence Interval 95%')
+plot_confidence_interval(1, Dummy5)
+plot_confidence_interval(2, Dummy10)
+plot_confidence_interval(3, Dummy15)
+plot_confidence_interval(4, Dummy20)
+plot_confidence_interval(5, a)
+plt.show()
 
 
 

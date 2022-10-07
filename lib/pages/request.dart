@@ -45,23 +45,28 @@ Future<void> postgresConnect(
         ' where x."rank" >= ' +
         rank;
     var results = await conn.query(query);
+    print("result query:" + results.toString());
+    if (results.isEmpty) {
+      print("SOLLEVATA?");
+      throw new FormatException();
+    } else {
+      double bestDistance = 2000;
+      results.forEach((element) {
+        double currentDistance = calculateDistance(
+            double.parse(element[0]),
+            double.parse(element[1]),
+            double.parse(positionAfterprivacy.split(":")[0]),
+            double.parse(positionAfterprivacy.split(":")[1]));
 
-    double bestDistance = 2000;
-    results.forEach((element) {
-      double currentDistance = calculateDistance(
-          double.parse(element[0]),
-          double.parse(element[1]),
-          double.parse(positionAfterprivacy.split(":")[0]),
-          double.parse(positionAfterprivacy.split(":")[1]));
+        if (currentDistance < bestDistance) {
+          bestDistance = currentDistance;
+          globalresponse = element.toString();
+          globalbestdistance = bestDistance.toString();
+        }
+      });
 
-      if (currentDistance < bestDistance) {
-        bestDistance = currentDistance;
-        globalresponse = element.toString();
-        globalbestdistance = bestDistance.toString();
-      }
-    });
-
-    await _write(globalresponse.toString());
+      await _write(globalresponse.toString());
+    }
     await conn.close();
   }
 }
@@ -224,8 +229,21 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<void> SaveLatLong() async {
-    await getLocation();
-    await _read();
+    try {
+      await getLocation();
+      await _read();
+    } catch (e) {
+      globalresponse = "";
+      Future<void>.delayed(
+          const Duration(
+              milliseconds: 500), // OR const Duration(milliseconds: 500),
+          () => showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                    title: Text("Notice"),
+                    content: Text("Nessun POI Trovato"),
+                  )));
+    }
     Home homeMaps = new Home();
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (context) => homeMaps));
@@ -240,6 +258,7 @@ class _RequestPageState extends State<RequestPage> {
       int rank,
       String globalresponse,
       String globalbestdistance) async {
+    print("La risposta salvata su firebase è: " + globalresponse);
     DateTime dateTime = DateTime.now();
     await FirebaseFirestore.instance.collection('request').add({
       'Location Request After Privacy': locationrequest,
