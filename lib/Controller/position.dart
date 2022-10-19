@@ -16,7 +16,7 @@ class Position {
     return lat.toString() + ":" + long.toString();
   }
 
-  String Dummyupdate(String privacydetail) {
+  List<Position> Dummyupdate(String privacydetail) {
     int dummy = int.parse(privacydetail);
     Random r = new Random();
     List<Position> dummyPosition = new List.empty(growable: true);
@@ -29,19 +29,24 @@ class Position {
       double randomLong =
           (long - 0.015) + ((long + 0.015) - (long - 0.015)) * r.nextDouble();
       Position randomValue = Position(randomLat, randomLong);
-      if (i == RealPositionIndex)
+      if (i == RealPositionIndex) {
         dummyPosition.add(RealPosition);
-      else
+        print("Real position dummy: " +
+            RealPosition.lat.toString() +
+            " " +
+            RealPosition.long.toString());
+      } else
         dummyPosition.add(randomValue);
     }
 
-    var latmean = dummyPosition.map((m) => m.lat).reduce((a, b) => a + b) /
-        dummyPosition.length;
+    //var latmean = dummyPosition.map((m) => m.lat).reduce((a, b) => a + b) /
+    //dummyPosition.length;
 
-    var longmean = dummyPosition.map((m) => m.long).reduce((a, b) => a + b) /
-        dummyPosition.length;
+    //var longmean = dummyPosition.map((m) => m.long).reduce((a, b) => a + b) /
+    //dummyPosition.length;
 
-    return latmean.toString() + ":" + longmean.toString();
+    //return latmean.toString() + ":" + longmean.toString();
+    return dummyPosition;
   }
 
   String Perturbation(String privacydetail) {

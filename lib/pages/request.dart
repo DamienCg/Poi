@@ -293,31 +293,6 @@ class _RequestPageState extends State<RequestPage> {
     if (this.lat == null || this.long == null) {
       getLocation();
     }
-    //modifica lat e long
-    //*******************/
-
-    print("Real position: " + lat.toString() + " " + long.toString());
-
-    Position temp_position =
-        new Position(double.parse(this.lat!), double.parse(this.long!));
-
-    Random r = new Random();
-    final randomValueLAT = r.nextDouble() * (44.52 - 44.47) + 44.47;
-    final randomValueLONG = r.nextDouble() * (11.37 - 11.32) + 11.32;
-
-    String real_pos_after_pert =
-        randomValueLAT.toString() + ":" + randomValueLONG.toString();
-    print("PORCODDDIOOO: " + real_pos_after_pert);
-
-    lat = real_pos_after_pert.split(":")[0];
-    long = real_pos_after_pert.split(":")[1];
-    print("Real position After pertubation: " +
-        lat.toString() +
-        " " +
-        long.toString());
-
-    /************/
-    // end generatore random
 
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
@@ -337,17 +312,15 @@ class _RequestPageState extends State<RequestPage> {
           globalbestdistance);
     }
     if (privacyCategory == "Dummy update") {
-      var positionAfterDummy = position.Dummyupdate(privacydetail);
-      await postgresConnect(value!, value2!, positionAfterDummy);
+      var listPositionAfterDummy = position.Dummyupdate(privacydetail);
+      await postgresConnect(value!, value2!, lat! + ":" + long!);
 
-      addRequestToFirebase(
-          positionAfterDummy,
-          value!,
-          privacyCategory,
-          privacydetail,
-          int.parse(value2!),
-          globalresponse,
-          globalbestdistance);
+      listPositionAfterDummy.forEach((element) {
+        String posit = element.lat.toString() + ":" + element.long.toString();
+
+        addRequestToFirebase(posit, value!, privacyCategory, privacydetail,
+            int.parse(value2!), globalresponse, globalbestdistance);
+      });
     }
     if (privacyCategory == "No privacy") {
       await postgresConnect(
