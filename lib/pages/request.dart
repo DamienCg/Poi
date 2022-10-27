@@ -46,9 +46,7 @@ Future<void> postgresConnect(
         ' where x."rank" >= ' +
         rank;
     var results = await conn.query(query);
-    print("result query:" + results.toString());
     if (results.isEmpty) {
-      print("SOLLEVATA?");
       throw new FormatException();
     } else {
       double bestDistance = 2000;
@@ -217,6 +215,7 @@ class _RequestPageState extends State<RequestPage> {
       );
 
   Future<void> getLocation() async {
+    print("GetLocation Inside");
     final service = LocationService();
     final locationData = await service.getLocation();
     if (locationData != null) {
@@ -231,7 +230,9 @@ class _RequestPageState extends State<RequestPage> {
 
   Future<void> SaveLatLong() async {
     try {
+      print("GetLocation");
       await getLocation();
+      print("Read");
       await _read();
     } catch (e) {
       globalresponse = "";
@@ -274,7 +275,7 @@ class _RequestPageState extends State<RequestPage> {
   }
 
   Future<String> _read() async {
-    print("Sono su read");
+    print("Read inside");
     String text = "";
 
     try {
@@ -294,6 +295,7 @@ class _RequestPageState extends State<RequestPage> {
       getLocation();
     }
 
+    print("Start algoritmi di privacy");
     Position position =
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
