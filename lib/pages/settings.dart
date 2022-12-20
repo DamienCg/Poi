@@ -28,6 +28,7 @@ class _MySettingsState extends State<Settings> {
     });
   }
 
+  bool myvalue = false;
   String privacyDetails = "Nothing to select";
   var state = {
     'Nothing to select': 'NP',
@@ -136,7 +137,31 @@ class _MySettingsState extends State<Settings> {
                 }).toList(),
               ),
             ),
-            SizedBox(height: 50),
+            //SizedBox(height: 50),
+            // create a checkbox with name "Smart Dummy"
+            Container(
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: myvalue,
+                    // on change of checkbox value change the state of myvalue
+                    onChanged: (bool? value) {
+                      setState(() {
+                        myvalue = value!;
+                      });
+                    },
+                  ),
+                  Text(
+                    "Smart Dummy",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.blueGrey),
+                  ),
+                ],
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
               child: GestureDetector(
