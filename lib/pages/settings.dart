@@ -28,7 +28,7 @@ class _MySettingsState extends State<Settings> {
     });
   }
 
-  bool myvalue = false;
+  bool smartdummy = false;
   String privacyDetails = "Nothing to select";
   var state = {
     'Nothing to select': 'NP',
@@ -143,11 +143,11 @@ class _MySettingsState extends State<Settings> {
               child: Row(
                 children: [
                   Checkbox(
-                    value: myvalue,
+                    value: smartdummy,
                     // on change of checkbox value change the state of myvalue
                     onChanged: (bool? value) {
                       setState(() {
-                        myvalue = value!;
+                        smartdummy = value!;
                       });
                     },
                   ),
@@ -202,7 +202,12 @@ class _MySettingsState extends State<Settings> {
   }
 
   void SaveSettings() {
-    _write(this._selectedPrivacy + ":" + this.privacyDetails);
+    String smartDummy = "0";
+    if (this.smartdummy) {
+      smartDummy = "1";
+    }
+    _write(
+        this._selectedPrivacy + ":" + this.privacyDetails + "-" + smartDummy);
     showDialog(
         context: context,
         builder: (context) => AlertDialog(

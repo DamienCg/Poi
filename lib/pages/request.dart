@@ -295,6 +295,7 @@ class _RequestPageState extends State<RequestPage> {
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
     String privacydetail = text.split(":").last;
+    String smartDummy = text.split("-").last;
     if (privacyCategory == "GPS perturbation") {
       var positionAfterPertubation = position.Perturbation(privacydetail);
       await postgresConnect(value!, value2!, positionAfterPertubation);
@@ -309,6 +310,9 @@ class _RequestPageState extends State<RequestPage> {
           globalbestdistance);
     }
     if (privacyCategory == "Dummy update") {
+      if (smartDummy == "1") {
+        print("Smart dummy attivo");
+      }
       var listPositionAfterDummy = position.Dummyupdate(privacydetail);
       await postgresConnect(value!, value2!, lat! + ":" + long!);
 

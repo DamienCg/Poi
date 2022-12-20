@@ -109,7 +109,6 @@ class _MapsPageState extends State<MapsPage> {
                     }),
               ))
     ];
-    //TODO RELOAD PAGE!
   }
 
   Future<void> start() async {
