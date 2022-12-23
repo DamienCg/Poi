@@ -17,6 +17,7 @@ class Position {
   }
 
   List<Position> Dummyupdate(String privacydetail) {
+    print("privacy detail: " + privacydetail);
     int dummy = int.parse(privacydetail);
     Random r = new Random();
     List<Position> dummyPosition = new List.empty(growable: true);
@@ -38,14 +39,6 @@ class Position {
       } else
         dummyPosition.add(randomValue);
     }
-
-    //var latmean = dummyPosition.map((m) => m.lat).reduce((a, b) => a + b) /
-    //dummyPosition.length;
-
-    //var longmean = dummyPosition.map((m) => m.long).reduce((a, b) => a + b) /
-    //dummyPosition.length;
-
-    //return latmean.toString() + ":" + longmean.toString();
     return dummyPosition;
   }
 

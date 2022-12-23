@@ -206,8 +206,7 @@ class _MySettingsState extends State<Settings> {
     if (this.smartdummy) {
       smartDummy = "1";
     }
-    _write(
-        this._selectedPrivacy + ":" + this.privacyDetails + "-" + smartDummy);
+    _write(this._selectedPrivacy + ":" + this.privacyDetails);
     showDialog(
         context: context,
         builder: (context) => AlertDialog(

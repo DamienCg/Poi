@@ -295,7 +295,7 @@ class _RequestPageState extends State<RequestPage> {
         new Position(double.parse(this.lat!), double.parse(this.long!));
     String privacyCategory = text.split(":").first;
     String privacydetail = text.split(":").last;
-    String smartDummy = text.split("-").last;
+    String smartDummy = "0";
     if (privacyCategory == "GPS perturbation") {
       var positionAfterPertubation = position.Perturbation(privacydetail);
       await postgresConnect(value!, value2!, positionAfterPertubation);
